@@ -116,7 +116,7 @@ Each column only gets included once, in the position that it first appears.  So 
 We can also rename columns while using `select()`.  The syntax is `new_name = old_name`.
 
 ```{r}
-select(police, raw_id=raw_row_number, date, time)
+select(police, raw_id=raw_row_number, date, time) 
 ```
 
 
@@ -147,6 +147,9 @@ Hint: remember that you can chain dplyr commands together with `%>%`.
 
 
 ```{r}
+police %>% 
+  select(-department_id,-department_name) %>% 
+  rename(age = subject_age, sex = subject_sex)
 
 ```
 
@@ -183,7 +186,8 @@ And there are even more [select helper functions](https://tidyselect.r-lib.org/r
 Use `select()` to get a copy of `police` without the columns that start with "raw".
 
 ```{r}
-
+police %>% 
+  select(-starts_with('raw'))
 ```
 
 Hint: If you mess up your `police` dataset, re-run the cell near the top of the file under the Data header and read the data in again fresh.
@@ -259,7 +263,9 @@ Hints:
 * The "or" operator is `|`; the "and" operator is `&`
 
 ```{r}
-
+police %>% 
+  filter((location == '60201' | location =='60202')&subject_sex =='male')
+  
 ```
 
 ## Including Variable Transformations
@@ -290,7 +296,7 @@ filter(mtcars, hp == max(hp))
 Using `mtcars`, find the car with the minimum (`min`) displacement (disp) value:
 
 ```{r}
-
+filter(mtcars, disp == min(disp))
 ```
 
 
@@ -331,9 +337,10 @@ mutate(police, vehicle_age = 2017 - vehicle_year) %>%
 We can put multiple mutations in the same call to mutate, with the expressions separated by commas:
 
 ```{r}
-mutate(police, 
-       vehicle_age = 2017 - vehicle_year,
-       old_car = vehicle_year < 2000)
+police %>% 
+  mutate(vehicle_age = 2017 - vehicle_year,
+         old_car = vehicle_year < 2000) %>% 
+  select(starts_with('vehicle'))
 ```
 
 
@@ -385,6 +392,14 @@ If beat is "/" or "CHICAGO", set it to `NA` instead using `mutate()`.
 Hint: it's ok if you take two steps to do this.    
 
 ```{r}
+
+police %>% 
+  select(beat) %>% 
+  mutate(beat=na_if(beat,'/'),
+       beat = na_if(beat,'CHICAGO'))
+
+
+
 
 ```
 
