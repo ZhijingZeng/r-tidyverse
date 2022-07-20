@@ -79,6 +79,9 @@ We get one column per summary variable we create.  Once we group below, we'll se
 Use summarize to compute the `min()` and `max()` `vehicle_year`
 
 ```{r}
+police %>% 
+  summarize(min_vehicle_year = min(vehicle_year),
+            max_vehicle_year =max(vehicle_year))
 
 ```
 
@@ -140,7 +143,7 @@ Now use this new `na_count()` function to count the missing values in each colum
 
 ```{r}
 police %>%
-  summarize(across(___, ___))
+  summarize(across(everything(), na_count))
 ```
 
 
@@ -171,7 +174,7 @@ First, what if we just group:
 
 ```{r}
 police %>%
-  group_by(outcome)
+  group_by(outcome) 
 ```
 
 When we print this in the console, 
@@ -213,7 +216,9 @@ We can group by multiple columns, and we'll get all of the combinations of value
 police %>% 
   group_by(subject_sex, subject_race) %>%
   summarize(mean_vehicle_age = mean(vehicle_age),
-            sd_vehicle_age = sd(vehicle_age))
+            sd_vehicle_age = sd(vehicle_age)) 
+  
+  
 ```
 
 Let's compute the ratio of warnings to citations by subject_race - note that we can use the variables we create in later expressions within the same call to `summarize()`:
@@ -233,6 +238,9 @@ There's considerable variation here, from 1.1 warnings for every citation given 
 Compute the `min()` and `max()` `vehicle_year` for each `vehicle_make`.
 
 ```{r}
+police %>% 
+  group_by(vehicle_make) %>% 
+  summarize(min(vehicle_year),max(vehicle_year)) %>% View()
 
 ```
 
@@ -310,6 +318,10 @@ police %>%
 Sort the data by `vehicle_make` and then `vehicle_year`.
 
 ```{r}
+police %>% 
+  arrange(vehicle_make,vehicle_year) %>% 
+  select(vehicle_make,vehicle_year)
+
 
 ```
 
@@ -353,6 +365,10 @@ police %>%
 How many times does each type of violation appear in the dataset?  Bonus: sort the results from most to least frequent.  You can do this with `arrange()` or look at the documentation for `count()` to find another option.
 
 ```{r}
+police %>% 
+  count(violation,sort = TRUE)  %>% 
+  slice_max(n,n=4)
+
 
 ```
 
