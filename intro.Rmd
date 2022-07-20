@@ -65,6 +65,7 @@ police <- read_csv("https://raw.githubusercontent.com/nuitrcs/r-tidyverse/main/d
                    col_types=c("location"="c"))
 ```
 
+
 ### EXERCISE
 
 Remember: you need to have loaded tidyverse, so execute the cells above.
@@ -76,7 +77,7 @@ Look at the documentation (help) page for `read_csv`.  You can open it by typing
 Change the code below so that **only** empty strings "" and "N/A" values are imported as missing (not "NA").  Look at `fix_data` after importing so you can check the values.
 
 ```{r, eval=TRUE}
-fix_data <- read_csv("https://raw.githubusercontent.com/nuitrcs/r-tidyverse/main/data/missing.csv")
+fix_data <- read_csv("https://raw.githubusercontent.com/nuitrcs/r-tidyverse/main/data/missing.csv",na = c("", "N/A"))
 fix_data
 ```
 
@@ -155,7 +156,7 @@ Remember: you need to have loaded tidyverse, and the police data, so execute the
 Convert this base R expression: `police[,c("violation", "citation_issued", "warning_issued")]` to use `select()` instead to do the same thing: 
 
 ```{r}
-
+select(police,"violation", "citation_issued", "warning_issued")
 ```
 
 
@@ -189,7 +190,7 @@ Use `filter()` to choose the rows where subject_race is "white".
 The equivalent base R expression would be `police[police$subject_race == "white",]`.  
 
 ```{r}
-
+filter(police,subject_race =="white")
 ```
 
 
@@ -235,7 +236,7 @@ and you'll often see code formatted, so `%>%` is at the end of each line, and th
 
 ```{r}
 police %>%
-  select(date, time)
+  select(date, time) 
 ```
 
 The pipe comes from a package called `magrittr`, which has additional special operators in it that you can use.  The keyboard shortcut for `%>%` is command-shift-M (Mac) or control-shift-M (Windows).
@@ -285,6 +286,9 @@ The equivalent base R expression would be: `police[police$beat == "71", c("date"
 Hint: remember that a column needs to still be in the data frame if you're going to use the column to filter.
 
 ```{r}
+police %>% 
+  filter(beat == '71') %>% 
+  select(date,time,outcome)
 
 ```
 
@@ -306,7 +310,9 @@ police60201 <- police %>%
 Select only vehicle_year and vehicle_make columns for observations where there were contraband_weapons
 
 ```{r}
-
+police %>% 
+  filter(contraband_weapons) %>% 
+  select(vehicle_year,vehicle_make)
 ```
 
 
@@ -315,5 +321,10 @@ Select only vehicle_year and vehicle_make columns for observations where there w
 We learned what tibbles are, the dplyr equivalents of indexing and subsetting a data frame, and the pipe `%>%` operator.
 
 Next time we're going to look at some more complicated use cases for `select`, `filter`, and `slice`, as well as learn `mutate` to create or change variables in our datasets.  
+```{r}
+
+```
+
+
 
 
